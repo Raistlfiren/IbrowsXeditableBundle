@@ -1,4 +1,4 @@
-IbrowsXeditableBundle
+IbrowsXeditableBundle - VERIFICATION
 =============================
 
 x-editable ( http://vitalets.github.io/x-editable/ ) symfony2 forms integration
