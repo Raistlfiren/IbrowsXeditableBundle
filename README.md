@@ -65,6 +65,7 @@ Example
 --------------------------
 The current usage for this bundle is to display a whole form inside of x-editable. The HTML output of the render function 
 is as follows - 
+    
     ```
             <a 
              data-form="<div id=&quot;form_name&quot;><div>                <label for=&quot;form_name_test&quot;>Test</label><input type=&quot;text&quot; id=&quot;form_name_test&quot; name=&quot;form_name[form_name][test]&quot; maxlength=&quot;5&quot; value=&quot;test&quot; /></div><div>"
@@ -81,6 +82,7 @@ is as follows -
     ```
 
 Rendering the form is as easy as - 
+    
     ```
         $form = $this->get('ibrows_xeditable.mapper.factory')->createForm('test', new TestType(), $entity, array(
                     'em' => $this->getDoctrine()->getEntityManager('test'),
@@ -90,11 +92,13 @@ Rendering the form is as easy as -
     ```
     
 Render the form with the built in TWIG function
+    
     ```
         {{ xedit_inline_render(form) }}
     ```
         
 Add the following JS to the page
+    
     ```
         $("#xeditable_test").ibrowsXeditableInit()
     ```            
