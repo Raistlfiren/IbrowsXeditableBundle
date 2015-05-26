@@ -60,70 +60,41 @@ Install & setup the bundle
                 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
             {% endstylesheets %}
     ```
+    
+Example
+--------------------------
+The current usage for this bundle is to display a whole form inside of x-editable. The HTML output of the render function 
+is as follows - 
+    ```
+            <a 
+             data-form="<div id=&quot;form_name&quot;><div>                <label for=&quot;form_name_test&quot;>Test</label><input type=&quot;text&quot; id=&quot;form_name_test&quot; name=&quot;form_name[form_name][test]&quot; maxlength=&quot;5&quot; value=&quot;test&quot; /></div><div>"
+             aria-describedby="popover522525" 
+             title="" 
+             data-original-title="" 
+             href="#" 
+             class="ibrowsXeditable editable editable-click editable-empty editable-open" 
+             data-xeditable="" 
+             data-path="" 
+             data-url="test" 
+             data-type="ibrows_xeditable_form" 
+             id="xeditable_ics_prodcavebundle_caves_">Empty</a>
+    ```
 
-
-Basic Usage
------------
-Get the factory and wrap your form with a xeditableFormMapper
-
-``` php
-$factory = $this->get('ibrows_xeditable.mapper.factory');
-$xeditableFormMapper = $factory->createFormFromRequest(
-   'user_xedit', //target route where data would be sent after submit
-    array('user' => $user->getId()), // parameters  for the target route
-    $request, // request to get information about the current view, to find forward paramters
-    new UserEditType(),  // a form type with a name and a firstName field
-    $user, // form data for the form type
-    array('validation_groups' => arrya('edit_user')) // form options for the form type
-);
-```
-
-
-
-Then user the  xedit_inline_render function in twig to render the  xeditableFormMapper
-
-XeditableMapperInterface $mapper, $formPath = null, array $attributes = array(), array $options = array()
-
-```
-  {{ xedit_inline_render(xeditableFormMapper, 'name', {'data-emptytext': 'userName'|trans}) }}
-  {{ xedit_inline_render(xeditableFormMapper, 'firstName', {'data-emptytext': 'firstName'|trans}) }}
-
-```
-
-Save the xedit all request from one form in a action
-
-``` php
-        /**
-         * @Route("/xedit/{user}", name="user_xedit")
-         * @param User $user
-         * @param Request $request
-         * @return Response|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|void
-         */
-        public function xeditAction(User $user, Request $request)
-        {
-            $factory = $this->get('ibrows_xeditable.mapper.factory');
-            $xeditableFormMapper = $factory->createFormFromRequest(
-               'user_xedit', //target route where data would be sent after submit
-                array('user' => $user->getId()), // parameters  for the target route
-                $request, // request to get information about the current view, to find forward paramters
-                new UserEditType(),  // a form type with some fields
-                $user, // form data for the form type
-                array('validation_groups' => array('edit_user')) // form options for the form type
-            );
-
-            if ($request->isMethod('POST')) {
-                if (($response = $xeditableFormMapper->handleRequest($request)) instanceof Response) {
-                    return $response;
-                }
-
-                $em = $this->getManagerForClass($user);
-                $em->persist($user);
-                $em->flush();
-
-                // after success redirect to view, so frontend can be refreshed
-                return $this->redirectToForwardRoute($request, 'GET');
-            }
-            // get back view of the handled form, to display error messages
-            return new Response($xeditableFormMapper->renderXeditable($request->get('path')));
-        }
-```
+Rendering the form is as easy as - 
+    ```
+        $form = $this->get('ibrows_xeditable.mapper.factory')->createForm('test', new TestType(), $entity, array(
+                    'em' => $this->getDoctrine()->getEntityManager('test'),
+                    'action' => $this->generateUrl('caves_update', array('id' => $entity->id())),
+                    'method' => 'PUT',
+                ));
+    ```
+    
+Render the form with the built in TWIG function
+    ```
+        {{ xedit_inline_render(form) }}
+    ```
+        
+Add the following JS to the page
+    ```
+        $("#xeditable_test").ibrowsXeditableInit()
+    ```            
