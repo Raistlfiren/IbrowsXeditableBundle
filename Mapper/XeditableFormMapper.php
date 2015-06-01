@@ -27,15 +27,16 @@ class XeditableFormMapper extends AbstractFormXeditableMapper
     protected $parameters = array();
 
     /**
-     * @param FormInterface $form
-     * @param EngineInterface $engine
-     * @param string $url
-     * @param null $validator
-     * @param bool $validateExtra
+     * @param FormInterface $form instance of a new form builder
+     * @param EngineInterface $engine instance of the default twig engine
+     * @param string $url route to update/delete entity
+     * @param null $validator type of validation
+     * @param bool $validateExtra if there is any extra validation set
      * @throws \Exception
      */
     public function __construct(FormInterface $form, EngineInterface $engine, $url = null, $validator = null, $validateExtra = false)
     {
+        //Setup new object with all of the required information
         $this->form = $form;
         $this->engine = $engine;
 
@@ -85,16 +86,25 @@ class XeditableFormMapper extends AbstractFormXeditableMapper
      */
     public function render($path = null, array $attributes = array(), array $options = array())
     {
+        //Path is the second parameter given in the render function
+        //Look for path in form object, otherwise return exception
         if (!$form = $this->getFormByPath($path)) {
             throw new \Exception("Path $path invalid");
         }
 
+        //Get the attributes from the render function in the TWIG template
         $attributes = $this->getAttributes($attributes);
+
+        //Get the options from the render function in the TWIG template
         $options = $this->getOptions($options);
 
+        //Get fields individual value
         $value = $this->getValue($form, $options);
+
+        //Get fields render template - xeditable.html.twig
         $template = $this->getRenderTemplate($options);
 
+        //Merge all of the attributes together and prepend xeditable to the id
         $attributes = array_merge(
             array(
                 'id' => 'xeditable_' . $this->form->getName() . '_' . $path
@@ -129,15 +139,21 @@ class XeditableFormMapper extends AbstractFormXeditableMapper
      */
     public function renderXeditable($path = null, array $attributes = array(), array $options = array())
     {
+        //Get all attribute set on the object
         $attributes = $this->getAttributes($attributes);
+
+        //Get all of the options set on the object
         $options = $this->getOptions($options);
 
+        //Clone the form of the field
         if (!$form = $this->getFormByPath($path, clone $this->form, true)) {
             throw new \Exception("Path $path invalid");
         }
 
+        //Get the form template
         $template = $this->getFormTemplate($options);
 
+        //Render the template with the data
         return $this->engine->render($template, $this->getEditParameters($form, $attributes, $options));
     }
 
