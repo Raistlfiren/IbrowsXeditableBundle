@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Validator\ValidatorInterface;
 
+//Creates either a form collection mapper or form mapper, nothing else....
 class XeditableMapperFactory
 {
     const VALIDATE_FULL = 'full';
@@ -65,10 +66,12 @@ class XeditableMapperFactory
      */
     protected static function getForwardParameters(Request $request = null)
     {
+        //If request is NULL then return an empty array, otherwise get the requests route and parameters
         if ($request == null) {
             return array();
         }
 
+        //Returned route from $request
         return array(
             'forwardRoute'       => $request->attributes->get('_route'),
             'forwardRouteParams' => $request->attributes->get('_route_params', array())
@@ -96,43 +99,52 @@ class XeditableMapperFactory
     }
 
     /**
-     * @param string $xeditableRoute
-     * @param array $parameters
-     * @param Request $request
-     * @param string $type
-     * @param mixed $data
-     * @param array $options
+     * @param string $xeditableRoute target route where data would be sent after submit
+     * @param array $parameters parameters  for the target route
+     * @param Request $request request to get information about the current view, to find forward paramters
+     * @param string $type a form type with relevant fields
+     * @param mixed $data form data for the form type
+     * @param array $options form options for the form type
      * @param string $validate
      * @return XeditableFormMapper
      */
     public function createFormFromRequest($xeditableRoute, $parameters = array(), Request $request = null, $type = 'form', $data = null, array $options = array(), $validate = self::VALIDATE_EDIT_PART)
     {
+        //Get routing parameters if request is not NULL, otherwise an empty array is returned
         $forwardParameters = static::getForwardParameters($request);
+
+        //Grab the url based on the route and the parameters given... If request is not NULL return forward parameters
         $url = $this->router->generate($xeditableRoute, array_merge($forwardParameters, $parameters));
 
         return $this->createForm($url, $type, $data, $options, $validate);
     }
 
     /**
-     * @param string $url
-     * @param string $type
-     * @param mixed $data
-     * @param array $options
+     * @param string $url route to update request
+     * @param string $type the form type
+     * @param mixed $data form data for the form type
+     * @param array $options any options given to the form
      * @param string $validate
      * @return XeditableFormMapper
      */
     public function createForm($url, $type = 'form', $data = null, array $options = array(), $validate = self::VALIDATE_EDIT_PART)
     {
 
+        //Merge the default options with the other normal options for the form
         $options = array_merge($this->defaultOptions, $options);
+
+        //Create a new form builder instance with the form type, data, and merged options
         $builder = $this->formFactory->createBuilder($type, $data, $options);
 
+        //Remove the validation listener on the form is validate none or partial is set
         if ($validate == self::VALIDATE_EDIT_PART || $validate == self::VALIDATE_NONE) {
             static::removeValidationListener($builder);
         }
 
+        //Get an instance of the form
         $form = $builder->getForm();
 
+        //Store it into a new XeditableFormMapper instance
         return new XeditableFormMapper(
             $form,
             $this->engine,
