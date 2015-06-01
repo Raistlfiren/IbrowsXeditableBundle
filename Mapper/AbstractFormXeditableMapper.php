@@ -2,6 +2,7 @@
 
 namespace Ibrows\XeditableBundle\Mapper;
 
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\EngineInterface;
@@ -35,19 +36,46 @@ abstract class AbstractFormXeditableMapper extends AbstractXeditableMapper
      */
     protected function getFormByPath($path, $form = null, $removeOther = false)
     {
+        //Set the form, if it isn't set
         if (!$form) {
             $form = $this->form;
         }
 
+        //If no path is set, then return the whole form
         if (!$path) {
             return $form;
         }
 
+        //Explode every part on a period
         $parts = explode(".", $path);
+
+        //Look through form for field names...
+        //Finds information for that particular field
         while (!is_null($name = array_shift($parts))) {
+
+            //Check to see if the basic form doesn't include the type name
             if (!$form->has($name)) {
-                throw new \Exception("$name not found in form {$form->getName()}");
+
+                //Now loop through all of the children elements to see if it a collection type
+                foreach($form->all() as $childForm) {
+
+                    if (!$childForm instanceof Form) {
+                        //It must not be, so return new exception
+                        throw new \Exception("$name not found in form {$form->getName()}");
+                    } else {
+                        //Oh it seems like it is so see if childform has the element and store it in an array or throw exception
+                        if (!$childForm->has($name)) {
+                            throw new \Exception("$name not found in form {$form->getName()}");
+                        } else {
+                            $form[] = $childForm->get($name);
+                        }
+                    }
+                }
+
+            } else {
+                $form = $form->get($name);
             }
+
             if ($removeOther) { //remove other childs to save time & reduce db requests
                 foreach ($form->all() as $childname => $child) {
                     if ($name != $childname) {
@@ -55,9 +83,9 @@ abstract class AbstractFormXeditableMapper extends AbstractXeditableMapper
                     }
                 }
             }
-            $form = $form->get($name);
         }
 
+        //Return form if something is found
         return $form;
     }
 
