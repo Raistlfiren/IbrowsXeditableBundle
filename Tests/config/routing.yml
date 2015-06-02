@@ -1,0 +1,3 @@
+Form:
+  resource: "@StandaloneTestBundle/Controller/FormController.php"
+  type: annotation
