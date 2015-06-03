@@ -2,6 +2,8 @@
 
 namespace Ibrows\XeditableBundle\Tests;
 
+require_once __DIR__.'/bootstrap.php';
+
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
@@ -32,7 +34,7 @@ class AppKernel extends Kernel
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Ibrows\XeditableBundle\IbrowsXeditableBundle(),
-            new \Ibrows\XeditableBundle\Tests\StandaloneTestBundle\StandaloneTestBundle()
+            new \Ibrows\XeditableBundle\Tests\StandaloneTestBundle\StandaloneTestBundle(),
         );
     }
 
@@ -44,6 +46,7 @@ class AppKernel extends Kernel
     public function serialize() {
         return $this->config;
     }
+
     public function unserialize($config) {
         $this->__construct($config);
     }

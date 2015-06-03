@@ -1,4 +1,6 @@
 <?php
 
-if ( !$loader = @include __DIR__.'/../vendor/autoload.php' )
-    echo 'Update your dependencies for composer by doing composer install...';
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
+$loader = require __DIR__.'/../vendor/autoload.php';
+AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
