@@ -40,4 +40,11 @@ class AppKernel extends Kernel
     {
         $loader->load($this->config);
     }
+
+    public function serialize() {
+        return $this->config;
+    }
+    public function unserialize($config) {
+        $this->__construct($config);
+    }
 }
