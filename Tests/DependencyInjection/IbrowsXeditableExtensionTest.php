@@ -2,57 +2,48 @@
 
 namespace Ibrows\XeditableBundle\Tests\DependencyInjection;
 
-
-use Ibrows\XeditableBundle\DependencyInjection\IbrowsXeditableExtension;
-use Ibrows\XeditableBundle\Tests\AppKernel;
 use Ibrows\XeditableBundle\Tests\StandaloneTest;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class IbrowsXeditableExtensionTest extends StandaloneTest
 {
 
-    /** @var ContainerBuilder $container */
+    /** @var ContainerInterface $container */
     protected $container;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->container = new ContainerBuilder();
-        $loader = new IbrowsXeditableExtension();
-        $loader->load(array(array()), $this->container);
+        $this->container = self::$kernel->getContainer();
     }
 
-    public function testDefault()
+    public function testDefaultIsLoaded()
     {
         $this->assertTrue(
-            $this->container->hasDefinition('ibrows_xeditable.mapper.factory'),
+            $this->container->has('ibrows_xeditable.mapper.factory'),
             'The mapper factory is not loaded.'
         );
 
         $this->assertTrue(
-            $this->container->hasDefinition('ibrows_xeditable.twig.extension'),
+            $this->container->has('ibrows_xeditable.twig.extension'),
             'The twig extension is not loaded.'
         );
+    }
 
+    public function testDefaultIsInstanceOf()
+    {
         $this->isInstanceOf(
             'Ibrows\XeditableBundle\Twig\TwigExtension',
             $this->container->get('ibrows_xeditable.twig.extension'),
-            'Twig extension is not instance of Ibrows\XeditableBundle\Twig\TwigExtension'
+            'Twig extension is not an instance of Ibrows\XeditableBundle\Twig\TwigExtension'
         );
 
         $this->isInstanceOf(
             'Ibrows\XeditableBundle\Mapper\XeditableMapperFactory',
             $this->container->get('ibrows_xeditable.mapper.factory'),
-            'Twig extension is not instance of Ibrows\XeditableBundle\Mapper\XeditableMapperFactory'
+            'Form mapper extension is not an instance of Ibrows\XeditableBundle\Mapper\XeditableMapperFactory'
         );
     }
 
-    public function testDefaultArgumentsForFormMapper()
-    {
-        $test = $this->container->getDefinition('ibrows_xeditable.mapper.factory');
-
-        echo 'hi';
-    }
 }
