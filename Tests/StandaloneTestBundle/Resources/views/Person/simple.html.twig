@@ -1,0 +1,8 @@
+{% extends 'StandaloneTestBundle::layout.html.twig' %}
+
+{% block content %}
+
+    {{ xedit_inline_render(form, 'firstname') }}
+    {{ xedit_inline_render(form, 'lastname') }}
+
+{% endblock %}
