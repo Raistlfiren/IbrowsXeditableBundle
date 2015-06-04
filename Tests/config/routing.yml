@@ -1,3 +1,3 @@
-test:
-    path:      /test
-    defaults:  { _controller: StandaloneTestBundle:Form:test }
+simple:
+    path:      /simple/{person}
+    defaults:  { _controller: StandaloneTestBundle:Form:simple }

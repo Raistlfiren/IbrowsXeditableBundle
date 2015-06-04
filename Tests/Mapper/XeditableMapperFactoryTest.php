@@ -25,8 +25,8 @@ class XeditableMapperFactoryTest extends StandaloneTest
     {
 
         $form = $this->xeditable->createFormFromRequest(
-            'test',
-            array(),
+            'simple',
+            array('person' => 1),
             NULL,
             'form',
             NULL,
@@ -38,34 +38,7 @@ class XeditableMapperFactoryTest extends StandaloneTest
             $form,
             'createFormFromRequest is not returning an xeditable form mapper.'
         );
+
     }
-
-    /*public function testConstruct()
-    {
-        $mock = $this
-            ->getMockBuilder('\Ibrows\XeditableBundle\Mapper\XeditableMapperFactory')
-            ->disableOriginalConstructor();
-
-        $mockFormFactory = $this
-            ->getMockBuilder('Symfony\Component\Form\FormBuilderInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockEngine = $this
-            ->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockValidator = $this
-            ->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockRouter = $this
-            ->getMockBuilder('Symfony\Component\Routing\Router')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-    }*/
 
 }
