@@ -4,6 +4,7 @@ namespace Ibrows\XeditableBundle\Tests\Mapper;
 
 use Ibrows\XeditableBundle\Mapper\XeditableMapperFactory;
 use Ibrows\XeditableBundle\Tests\StandaloneTest;
+use Symfony\Component\HttpFoundation\Request;
 
 class XeditableMapperFactoryTest extends StandaloneTest
 {
@@ -21,7 +22,7 @@ class XeditableMapperFactoryTest extends StandaloneTest
 
     }
 
-    public function testCreateFormFromRequest()
+    public function testCreateFormFromRequestBasicInitialization()
     {
 
         $form = $this->xeditable->createFormFromRequest(
@@ -37,6 +38,12 @@ class XeditableMapperFactoryTest extends StandaloneTest
             'Ibrows\XeditableBundle\Mapper\XeditableFormMapper',
             $form,
             'createFormFromRequest is not returning an xeditable form mapper.'
+        );
+
+        $this->assertInstanceOf(
+            'Symfony\Component\Form\FormInterface',
+            $form->getForm(),
+            'createFormFromRequest is not returning an form interface'
         );
 
     }
