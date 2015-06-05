@@ -24,6 +24,11 @@ class TwigExtensionTest extends \PHPUnit_Framework_TestCase
             'xedit_inline_render',
             $this->ext->getFunctions()
         );
+
+        $this->assertInstanceOf(
+            '\Twig_Function_Method',
+            $this->ext->getFunctions()['xedit_inline_render']
+        );
     }
 
     public function testXeditInlineRender()
