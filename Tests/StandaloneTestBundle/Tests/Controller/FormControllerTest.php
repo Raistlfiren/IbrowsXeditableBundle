@@ -32,4 +32,13 @@ class FormControllerTest extends StandaloneTest
 
     }
 
+    public function testCollectionAction()
+    {
+        $crawler = $this->client->request('GET', '/collection/1');
+
+        $test = $crawler->html();
+
+        echo 'test';
+    }
+
 }

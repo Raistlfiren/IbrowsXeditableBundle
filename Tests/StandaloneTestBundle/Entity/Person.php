@@ -2,6 +2,7 @@
 
 namespace Ibrows\XeditableBundle\Tests\StandaloneTestBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Person
@@ -28,6 +29,11 @@ class Person
      * @Assert\NotBlank()
      */
     private $numbers;
+
+    public function __construct()
+    {
+        $this->numbers = new ArrayCollection();
+    }
 
     /**
      * Set id
@@ -96,6 +102,29 @@ class Person
     public function getFirstname()
     {
         return $this->firstname;
+    }
+
+    /**
+     * @param Number $number
+     * @return $this
+     */
+    public function addNumber(Number $number)
+    {
+        $this->numbers->add($number);
+
+        return $this;
+    }
+
+    public function setNumbers($number)
+    {
+        $this->numbers = $number;
+
+        return $this;
+    }
+
+    public function getNumbers()
+    {
+        return $this->numbers;
     }
 
 }

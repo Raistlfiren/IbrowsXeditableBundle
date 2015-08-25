@@ -1,3 +1,12 @@
 simple:
     path:      /simple/{person}
     defaults:  { _controller: StandaloneTestBundle:Form:simple }
+simple_edit:
+    path:      /simple/edit
+    defaults:  { _controller: StandaloneTestBundle:Form:simple }
+simple_delete:
+    path:      /simple/delete
+    defaults:  { _controller: StandaloneTestBundle:Form:simple }
+collection:
+    path:      /collection/{person}
+    defaults:  { _controller: StandaloneTestBundle:Form:collection }
